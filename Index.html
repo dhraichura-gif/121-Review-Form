@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>1-1 Performance Review</title>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#eef1f4;--panel:#fff;--ink:#17212b;--mute:#5d6b78;--line:#d5dce3;--acc:#0f6b5f;--good:#17795a;--warn:#b57a0a;--bad:#b13a3a;--tint:#e3f0ed;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#12181e;--panel:#1b232b;--ink:#e8edf1;--mute:#93a1ad;--line:#2f3b46;--acc:#4cc3b0;--good:#4cc79b;--warn:#e0aa3e;--bad:#e27a7a;--tint:#1d3733}}
+:root[data-theme="dark"]{--bg:#12181e;--panel:#1b232b;--ink:#e8edf1;--mute:#93a1ad;--line:#2f3b46;--acc:#4cc3b0;--good:#4cc79b;--warn:#e0aa3e;--bad:#e27a7a;--tint:#1d3733}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 15px/1.5 "Public Sans",system-ui,sans-serif}
+main{max-width:920px;margin:0 auto;padding:20px 16px 60px}
+h1{font-size:26px;margin:0 0 4px;letter-spacing:-.02em}
+h2{font-size:17px;margin:0 0 12px}
+.sub{color:var(--mute);margin:0 0 18px}
+section{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:18px;margin-bottom:16px}
+.head{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px}
+label{display:block;font-size:13px;color:var(--mute);margin-bottom:3px}
+input,select,textarea{width:100%;font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:8px 10px}
+input:focus-visible,select:focus-visible,textarea:focus-visible,button:focus-visible{outline:2px solid var(--acc);outline-offset:1px}
+textarea{min-height:84px;resize:vertical}
+.tbl{overflow-x:auto}
+table{border-collapse:collapse;width:100%;min-width:560px}
+th{font-weight:500;color:var(--mute);font-size:13px;text-align:left;padding:4px 8px 8px}
+td{padding:6px 8px;border-top:1px solid var(--line)}
+td input{max-width:92px}
+.pill{display:inline-block;padding:2px 10px;border-radius:99px;font-size:13px;font-weight:500;border:1px solid currentColor}
+.good{color:var(--good)}.warn{color:var(--warn)}.bad{color:var(--bad)}.na{color:var(--mute)}
+.comp{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:10px 24px}
+.crow{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.scale{display:flex;gap:4px}
+.scale button{width:34px;height:34px;border-radius:6px;border:1px solid var(--line);background:var(--bg);color:var(--ink);font:inherit;cursor:pointer}
+.scale button[aria-pressed="true"]{background:var(--acc);border-color:var(--acc);color:var(--bg);font-weight:700}
+.two{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}
+.act{display:grid;grid-template-columns:auto 1fr 110px 140px auto;gap:8px;align-items:center;margin-bottom:8px}
+.act input[type=checkbox]{width:20px;height:20px}
+.act.done .t{text-decoration:line-through;color:var(--mute)}
+@media (max-width:640px){.act{grid-template-columns:auto 1fr auto}.act .o,.act .d{grid-column:2}}
+.btn{font:inherit;border:1px solid var(--line);background:var(--panel);color:var(--ink);padding:8px 14px;border-radius:6px;cursor:pointer}
+.btn.p{background:var(--acc);border-color:var(--acc);color:var(--bg);font-weight:700}
+.bar{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+pre{white-space:pre-wrap;word-break:break-word;background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:12px;font:13px/1.55 ui-monospace,Menlo,monospace;margin:12px 0 0}
+.score{font-size:13px;color:var(--mute);margin-top:8px}
+@media print{body{background:#fff;color:#000}.bar,.noprint{display:none}section{break-inside:avoid;border-color:#bbb}}
+</style>
+</head>
+<body>
+<main>
+<h1>1-1 performance review</h1>
+<p class="sub">Fill in before or during the session. Everything saves in this browser as you type.</p>
+
+<section><div class="head">
+<div><label for="agent">Agent name</label><input id="agent" data-k="agent"></div>
+<div><label for="mgr">Manager</label><input id="mgr" data-k="mgr"></div>
+<div><label for="date">Session date</label><input id="date" type="date" data-k="date"></div>
+<div><label for="per">Review period</label><input id="per" data-k="per" placeholder="e.g. September"></div>
+<div><label for="team">Team / queue</label><input id="team" data-k="team"></div>
+</div></section>
+
+<section><h2>Metrics against target</h2>
+<div class="tbl"><table><thead><tr><th>Metric</th><th>Actual</th><th>Target</th><th>Last period</th><th>Status</th></tr></thead><tbody id="kpis"></tbody></table></div>
+<p class="score" id="kscore"></p></section>
+
+<section><h2>Behaviours and skills (1 = needs work, 5 = role model)</h2><div class="comp" id="comps"></div></section>
+
+<section class="two">
+<div><h2>What went well</h2><textarea data-k="wins" aria-label="What went well"></textarea></div>
+<div><h2>What to improve</h2><textarea data-k="focus" aria-label="What to improve"></textarea></div>
+<div><h2>Agent's view: blockers and support needed</h2><textarea data-k="agentview" aria-label="Agent's view"></textarea></div>
+<div><h2>Wellbeing and workload</h2><textarea data-k="well" aria-label="Wellbeing and workload"></textarea></div>
+</section>
+
+<section><h2>Agreed actions</h2><div id="acts"></div>
+<button class="btn" id="addAct" type="button">Add action</button></section>
+
+<section><h2>Summary</h2>
+<div class="bar noprint">
+<button class="btn p" id="gen" type="button">Build summary</button>
+<button class="btn" id="copy" type="button">Copy text</button>
+<button class="btn" id="print" type="button">Print or save as PDF</button>
+<button class="btn" id="reset" type="button">Start new 1-1</button>
+</div>
+<pre id="out" aria-live="polite">Select "Build summary" to create a note you can send to the agent.</pre></section>
+</main>
+<script>
+const KPI=[["CSAT (%)",90,1],["QA score (%)",85,1],["First contact resolution (%)",75,1],["Average handle time (min)",6,0],["Schedule adherence (%)",90,1],["Customer sentiment / NPS",40,1]];
+const COMP=["Communication and tone","Empathy","Product and process knowledge","Problem solving","Compliance and accuracy","Ownership and follow-through","Teamwork","Use of tools and notes"];
+const KEY="oneToOneTool.v1";
+let S={kpi:KPI.map(k=>({a:"",t:k[1],p:""})),comp:COMP.map(()=>0),acts:[]};
+try{const r=localStorage.getItem(KEY);if(r)S=Object.assign(S,JSON.parse(r))}catch(e){}
+const $=id=>document.getElementById(id);
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}};
+function status(i){const k=S.kpi[i],a=parseFloat(k.a),t=parseFloat(k.t);
+ if(isNaN(a)||isNaN(t)||t===0)return["No data","na"];
+ const r=KPI[i][2]?a/t:t/a;
+ return r>=1?["On target","good"]:r>=.95?["Close","warn"]:["Below","bad"]}
+function trend(i){const k=S.kpi[i],a=parseFloat(k.a),p=parseFloat(k.p);
+ if(isNaN(a)||isNaN(p))return"";const up=a>p,better=KPI[i][2]?up:!up;
+ if(a===p)return"no change";return(up?"up ":"down ")+Math.abs(+(a-p).toFixed(1))+(better?" (better)":" (worse)")}
+function drawKpis(){
+ $("kpis").innerHTML=KPI.map((k,i)=>`<tr><td>${k[0]}<br><small class="na">${k[2]?"higher is better":"lower is better"}</small></td>
+ <td><input type="number" step="any" aria-label="${k[0]} actual" data-i="${i}" data-f="a" value="${S.kpi[i].a}"></td>
+ <td><input type="number" step="any" aria-label="${k[0]} target" data-i="${i}" data-f="t" value="${S.kpi[i].t}"></td>
+ <td><input type="number" step="any" aria-label="${k[0]} last period" data-i="${i}" data-f="p" value="${S.kpi[i].p}"></td>
+ <td id="st${i}"></td></tr>`).join("");
+ updStatus()}
+function updStatus(){let g=0,n=0;
+ KPI.forEach((k,i)=>{const[s,c]=status(i);if(c!=="na"){n++;if(c==="good")g++}
+  $("st"+i).innerHTML=`<span class="pill ${c}">${s}</span> <small class="na">${trend(i)}</small>`});
+ $("kscore").textContent=n?`${g} of ${n} measured metrics on target.`:"Enter actuals to see status."}
+function drawComps(){
+ $("comps").innerHTML=COMP.map((c,i)=>`<div class="crow"><span>${c}</span><div class="scale" role="group" aria-label="${c}">${[1,2,3,4,5].map(n=>`<button type="button" data-c="${i}" data-n="${n}" aria-pressed="${S.comp[i]===n}">${n}</button>`).join("")}</div></div>`).join("")}
+function drawActs(){
+ $("acts").innerHTML=S.acts.length?S.acts.map((a,i)=>`<div class="act ${a.done?"done":""}">
+ <input type="checkbox" aria-label="Done" data-a="${i}" data-f="done" ${a.done?"checked":""}>
+ <input class="t" placeholder="What will change?" aria-label="Action" data-a="${i}" data-f="text" value="${(a.text||"").replace(/"/g,"&quot;")}">
+ <select class="o" aria-label="Owner" data-a="${i}" data-f="owner"><option${a.owner==="Agent"?" selected":""}>Agent</option><option${a.owner==="Manager"?" selected":""}>Manager</option></select>
+ <input class="d" type="date" aria-label="Due date" data-a="${i}" data-f="due" value="${a.due||""}">
+ <button class="btn" type="button" data-del="${i}" aria-label="Remove action">Remove</button></div>`).join(""):'<p class="sub">No actions yet. Add one for each thing you agree to change.</p>'}
+document.addEventListener("input",e=>{const t=e.target;
+ if(t.dataset.k){S[t.dataset.k]=t.value}
+ else if(t.dataset.i!==undefined){S.kpi[t.dataset.i][t.dataset.f]=t.value;updStatus()}
+ else if(t.dataset.a!==undefined){const a=S.acts[t.dataset.a];a[t.dataset.f]=t.type==="checkbox"?t.checked:t.value;if(t.type==="checkbox")drawActs()}
+ save()});
+document.addEventListener("click",e=>{const t=e.target.closest("button");if(!t)return;
+ if(t.dataset.c!==undefined){const i=+t.dataset.c,n=+t.dataset.n;S.comp[i]=S.comp[i]===n?0:n;drawComps();save()}
+ else if(t.dataset.del!==undefined){S.acts.splice(+t.dataset.del,1);drawActs();save()}});
+$("addAct").onclick=()=>{S.acts.push({text:"",owner:"Agent",due:"",done:false});drawActs();save()};
+function build(){
+ const L=[];const v=k=>(S[k]||"").trim();
+ L.push(`1-1 REVIEW: ${v("agent")||"Agent"}${v("per")?" | "+v("per"):""}`);
+ L.push(`Date: ${v("date")||"-"}   Manager: ${v("mgr")||"-"}${v("team")?"   Team: "+v("team"):""}`,"","METRICS");
+ KPI.forEach((k,i)=>{const x=S.kpi[i];if(x.a==="")return;const[s]=status(i);L.push(`- ${k[0]}: ${x.a} (target ${x.t}) - ${s}${trend(i)?", "+trend(i):""}`)});
+ const rated=COMP.map((c,i)=>[c,S.comp[i]]).filter(x=>x[1]);
+ if(rated.length){L.push("","SKILLS (1-5)");rated.forEach(x=>L.push(`- ${x[0]}: ${x[1]}`))}
+ [["wins","WENT WELL"],["focus","TO IMPROVE"],["agentview","AGENT'S VIEW AND SUPPORT NEEDED"],["well","WELLBEING AND WORKLOAD"]].forEach(([k,h])=>{if(v(k))L.push("",h,v(k))});
+ const acts=S.acts.filter(a=>a.text&&a.text.trim());
+ if(acts.length){L.push("","AGREED ACTIONS");acts.forEach(a=>L.push(`- [${a.done?"x":" "}] ${a.text} (${a.owner}${a.due?", by "+a.due:""})`))}
+ $("out").textContent=L.join("\n")}
+$("gen").onclick=build;
+$("copy").onclick=async()=>{build();const b=$("copy");
+ try{await navigator.clipboard.writeText($("out").textContent);b.textContent="Copied"}
+ catch(e){const r=document.createRange();r.selectNodeContents($("out"));const s=getSelection();s.removeAllRanges();s.addRange(r);b.textContent="Selected, press copy"}
+ setTimeout(()=>b.textContent="Copy text",1800)};
+$("print").onclick=()=>{build();window.print()};
+$("reset").onclick=()=>{if(!confirm("Clear this form for the next 1-1? Last period values will carry over from this period's actuals."))return;
+ const keep={mgr:S.mgr,team:S.team};
+ S={kpi:S.kpi.map(k=>({a:"",t:k.t,p:k.a!==""?k.a:k.p})),comp:COMP.map(()=>0),acts:S.acts.filter(a=>!a.done)};
+ Object.assign(S,keep);save();init();$("out").textContent='Select "Build summary" to create a note you can send to the agent.'};
+function init(){document.querySelectorAll("[data-k]").forEach(el=>el.value=S[el.dataset.k]||"");
+ if(!S.date){S.date=new Date().toISOString().slice(0,10);$("date").value=S.date}
+ drawKpis();drawComps();drawActs()}
+init();
+</script>
+</body>
+</html>
